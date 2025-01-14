@@ -1,16 +1,25 @@
 import { atom } from "recoil";
 
-export const user = atom({
-  key: "user",
+export const currUser = atom({
+  key: "currUser",
   default: {},
 });
 
-export const note = atom({
-  key: "note",
-  default: "",
+export const currNote = atom({
+  key: "currNote",
+  default: 0,
 });
 
 export const notes = atom({
   key: "notes",
-  default: [note],
+  default: [
+    {
+      title: "Notes1",
+      content: "# Hello there",
+    },
+    {
+      title: "Notes2",
+      content: "# Hello there1",
+    },
+  ],
 });
