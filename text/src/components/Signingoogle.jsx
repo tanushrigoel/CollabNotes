@@ -23,6 +23,10 @@ function Signingoogle() {
           email: res.user.email,
           googleId: res.user.uid,
         });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ uid: res.user.uid, email: res.user.email })
+        );
 
         toast.success(`User ${res.user.displayName} logged in successfully`, {
           position: "top-right",
@@ -56,7 +60,8 @@ function Signingoogle() {
         onClick={googlelogin}
         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 cursor-pointer shadow-lg"
       >
-        Get Started
+        <a href=""></a>
+        Download
       </div>
     </div>
   );

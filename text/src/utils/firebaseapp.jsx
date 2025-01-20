@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 const firebaseConfig = {
-  apiKey: "AIzaSyCJifWwm8HM0OEWRl70TJF4HU8pMgJ-T9k",
+  apiKey: process.env.API_KEY,
   authDomain: "notes-app-113b9.firebaseapp.com",
   projectId: "notes-app-113b9",
   storageBucket: "notes-app-113b9.firebasestorage.app",

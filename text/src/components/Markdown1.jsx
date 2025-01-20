@@ -7,10 +7,7 @@ import { currNote, notes } from "../store/atoms/count";
 export const Markdown1 = () => {
   const [note, setNote] = useRecoilState(currNote);
   const notelist = useRecoilValue(notes);
-  const [notevalue, setnoteValue] = useState(() => {
-    const savedNote = localStorage.getItem(`note-${note}`);
-    return savedNote ? savedNote : notelist[note].content;
-  });
+  const [notevalue, setnoteValue] = useState(notelist[note]);
 
   useEffect(() => {
     const savedNote = localStorage.getItem(`note-${note}`);

@@ -12,14 +12,5 @@ export const currNote = atom({
 
 export const notes = atom({
   key: "notes",
-  default: [
-    {
-      title: "Notes1",
-      content: "# Hello there",
-    },
-    {
-      title: "Notes2",
-      content: "# Hello there1",
-    },
-  ],
+  default: [],
 });
