@@ -1,32 +1,42 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import SimpleMDE from "react-simplemde-editor";
+// import "xcatliu/simplemde-theme-base/master/dist/simplemde-theme-base.min.css"
 import "easymde/dist/easymde.min.css";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { currNote, notes } from "../store/atoms/count";
-
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../utils/firebaseapp";
 export const Markdown1 = () => {
-  const [note, setNote] = useRecoilState(currNote);
-  const notelist = useRecoilValue(notes);
-  const [notevalue, setnoteValue] = useState(notelist[note]);
+  const [currnote, setcurrnote] = useRecoilState(currNote);
+  // const notelist = useRecoilValue(notes);
+  // const [notevalue, setnoteValue] = useState(notelist[note]);
+
+  // useEffect(() => {
+  //   // const savedNote = localStorage.getItem(`note-${note}`);
+  //   setnoteValue(notelist[note]?.content);
+  // }, [note, notelist]);
+  // // savedNote ? savedNote :
+  // useEffect(() => {
+  //   // localStorage.setItem(`note-${note}`, notevalue);
+  // }, [notevalue, note]);
 
   useEffect(() => {
-    const savedNote = localStorage.getItem(`note-${note}`);
-    setnoteValue(savedNote ? savedNote : notelist[note].content);
-  }, [note, notelist]);
+    setcurrnote(currnote);
+  }, [currnote]);
 
-  useEffect(() => {
-    localStorage.setItem(`note-${note}`, notevalue);
-  }, [notevalue, note]);
+  // const unsub = onSnapshot(doc(db, "users"), (doc) => {
+  //   console.log("Current data: ", doc.data());
+  // });
 
-  console.log(note);
-  console.log(notevalue);
+  // console.log(note);
+  // console.log(notevalue);
 
   const customRendererOptions = useMemo(() => {
     return {
       autosave: {
         enabled: true,
         uniqueId: "demo",
-        delay:500,
+        delay: 500,
       },
       previewRender() {
         return ReactDOMServer.renderToString(
@@ -45,12 +55,13 @@ export const Markdown1 = () => {
   // const [value, setValue] = useState("Initial value");
 
   const onChange = useCallback((value) => {
-    setnoteValue(value);
+    setcurrnote(value);
+    // localStorage.setItem(`note-${note}`, notevalue);
   }, []);
 
   return (
     <SimpleMDE
-      value={notevalue}
+      value={currnote}
       options={customRendererOptions}
       onChange={onChange}
       className="min-h-screen text-white dark:bg-gray-900 "

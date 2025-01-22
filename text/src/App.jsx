@@ -8,33 +8,31 @@ import { useEffect, useState } from "react";
 import { currUser } from "./store/atoms/count";
 import { MdLogout } from "react-icons/md";
 function App() {
-  const [currUser, setCurrUser] = useRecoilState(currUser);
+  const [user, setUser] = useRecoilState(currUser);
   const [userLoggedIn, setuserLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setCurrUser(user);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const guser = localStorage.getItem("user");
+  //   if (guser) {
+  //     setUser(guser);
+  //   } // db to fetch all the related notes
+  // }, []);
 
   return (
     <>
-      <RecoilRoot>
-        <div className="flex bg-white text-primary dark:bg-gray-900 dark:text-primary-dark dark  font-inter">
-          <Sidebar className="w-1/4" />
-          <div className="flex-1 flex flex-col">
-            <div className="flex justify-end p-4">
-              {userLoggedIn ? (
-                <MdLogout className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"/>
-              ) : (
-                <Signingoogle className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" />
-              )}
-            </div>
-            <Markdown1 className="flex-1" />
+      <div className="flex bg-white text-primary dark:bg-gray-900 dark:text-primary-dark dark  font-inter">
+        <Sidebar className="w-1/4" />
+        <div className="flex-1 flex flex-col">
+          <div className="flex justify-end p-4">
+            {userLoggedIn ? (
+              <MdLogout className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" />
+            ) : (
+              <Signingoogle className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" />
+            )}
           </div>
+          <Markdown1 className="flex-1" />
         </div>
-      </RecoilRoot>
+      </div>
     </>
   );
 }

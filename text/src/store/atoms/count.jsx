@@ -7,7 +7,7 @@ export const currUser = atom({
 
 export const currNote = atom({
   key: "currNote",
-  default: 0,
+  default: "",
 });
 
 export const notes = atom({

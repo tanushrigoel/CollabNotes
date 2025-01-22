@@ -1,9 +1,11 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { notes } from "../store/atoms/count";
+import { currUser, notes } from "../store/atoms/count";
 import { useRecoilState } from "recoil";
 
-export default async function fetchNotes(uid) {
-  const userDocRef = doc(db, "users", uid);
+export default async function fetchNotes() {
+  const [curr, setCurr] = useRecoilState(currUser);
+  if(!curr) return "User does not exist"
+  const userDocRef = doc(db, "users", curr.uid);
   const [notecoll, setnotecoll] = useRecoilState(notes);
 
   // Check if document exists
