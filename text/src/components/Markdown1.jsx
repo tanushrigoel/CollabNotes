@@ -1,35 +1,60 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import SimpleMDE from "react-simplemde-editor";
-// import "xcatliu/simplemde-theme-base/master/dist/simplemde-theme-base.min.css"
 import "easymde/dist/easymde.min.css";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { currNote, notes } from "../store/atoms/count";
-import { doc, onSnapshot } from "firebase/firestore";
+import { currNote, currNoteId, currUser, notes } from "../store/atoms/count";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseapp";
+import _ from "lodash";
 export const Markdown1 = () => {
   const [currnote, setcurrnote] = useRecoilState(currNote);
-  // const notelist = useRecoilValue(notes);
-  // const [notevalue, setnoteValue] = useState(notelist[note]);
+  const [currId, setcurrId] = useRecoilState(currNoteId);
+  const curruser = useRecoilValue(currUser);
+  const saveToLocalStorage = useCallback(
+    _.debounce((id, note) => {
+      localStorage.setItem(`note-${id}`, note);
+      console.log(`Saved note-${id} to localStorage`);
+    }, 5000), // 10-second debounce delay
+    [] // Dependencies array: empty to ensure it's created only once
+  );
+  const saveToFirestore = useCallback(
+    _.debounce(async (id, note) => {
+      try {
+        if (!curruser.uid) {
+          console.error("Error: curruser or curruser.id is undefined");
+          return; // Exit early if curruser is not defined
+        }
+        if (!id || !note) {
+          console.error("Error: currId or currnote is undefined");
+          return; // Exit early if id or note is not defined
+        }
+        const noteRef = doc(db, "users", curruser.uid, "notes", id); // Update with correct user and note IDs
+        await updateDoc(noteRef, { content: note });
+        console.log(`Updated note-${id} to Firestore`);
+      } catch (error) {
+        console.error("Error updating note to Firestore:", error);
+      }
+    }, 10000), // 20-second debounce delay
+    [] // Dependencies array: empty to ensure it's created only once
+  );
 
-  // useEffect(() => {
-  //   // const savedNote = localStorage.getItem(`note-${note}`);
-  //   setnoteValue(notelist[note]?.content);
-  // }, [note, notelist]);
-  // // savedNote ? savedNote :
-  // useEffect(() => {
-  //   // localStorage.setItem(`note-${note}`, notevalue);
-  // }, [notevalue, note]);
-
+  // Save to both localStorage and Firestore on note changes
   useEffect(() => {
-    setcurrnote(currnote);
+    if (currId && currnote) {
+      saveToLocalStorage(currId, currnote);
+      if (curruser) saveToFirestore(currId, currnote);
+    }
+    // Cleanup on unmount
+    // return () => {
+    //   saveToLocalStorage.cancel();
+    //   // if(curruser)
+    //   saveToFirestore.cancel();
+    // };
   }, [currnote]);
 
-  // const unsub = onSnapshot(doc(db, "users"), (doc) => {
-  //   console.log("Current data: ", doc.data());
-  // });
-
-  // console.log(note);
-  // console.log(notevalue);
+  const onChange = (value) => {
+    setcurrnote(value);
+  };
 
   const customRendererOptions = useMemo(() => {
     return {
@@ -50,13 +75,6 @@ export const Markdown1 = () => {
         );
       },
     };
-  }, []);
-
-  // const [value, setValue] = useState("Initial value");
-
-  const onChange = useCallback((value) => {
-    setcurrnote(value);
-    // localStorage.setItem(`note-${note}`, notevalue);
   }, []);
 
   return (

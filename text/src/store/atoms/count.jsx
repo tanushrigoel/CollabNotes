@@ -5,6 +5,11 @@ export const currUser = atom({
   default: {},
 });
 
+export const currNoteId = atom({
+  key: "currNoteId",
+  default:""
+});
+
 export const currNote = atom({
   key: "currNote",
   default: "",

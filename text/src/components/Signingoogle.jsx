@@ -26,10 +26,10 @@ function Signingoogle() {
           uid: user.uid,
         });
         const userRef = doc(db, "users", user.uid); // Reference to user's document
-        console.log(userRef);
+        // console.log(userRef);
 
         const userSnap = await getDoc(userRef);
-        console.log(userSnap);
+        // console.log(userSnap);
 
         if (!userSnap.exists()) {
           console.log(userSnap.exists());
@@ -66,12 +66,15 @@ function Signingoogle() {
             const querySnapshot = await getDocs(notesRef);
 
             const notes = [];
+            // console.log(doc.data);
+            
             querySnapshot.forEach((doc) => {
+              localStorage.setItem(`note-${doc.id}`, doc.data);
               notes.push({ id: doc.id, ...doc.data() }); // Extract each note's data
             });
 
             setnotesc(notes); // Update the notes state
-            console.log("All notes:", notes);
+            // console.log("All notes:", notes);
           } catch (error) {
             console.error("Error getting notes:", error);
           }
